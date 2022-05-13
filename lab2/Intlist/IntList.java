@@ -103,6 +103,7 @@ public class IntList {
     }
 
 
+    /*
     public static IntList copy(IntList A) {
         if (A == null) {
             return null;
@@ -117,7 +118,14 @@ public class IntList {
         }
         return res;
     }
+    */
 
+    public static IntList copy(IntList A) {
+        if (A == null) {
+            return null;
+        }
+        return new IntList(A.first, IntList.copy(A.rest));
+    }
 
 
 
