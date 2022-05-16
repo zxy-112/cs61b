@@ -98,7 +98,6 @@ public class LinkedListDequeTest {
         while (!lld1.isEmpty()) {
             lld1.removeFirst();
         }
-        lld1.addFirst("i");
         actual = lld1.get(0);
         if (!(actual == null)) {
             System.out.println("get(0) get '" + actual + "', but expect:" + null);

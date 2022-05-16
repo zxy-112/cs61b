@@ -8,18 +8,18 @@ public class LinkedListDeque<Lockless> {
      */
 
     private class LockNode {
-        public Lockless first;
-        public LockNode rest;
-        public LockNode prev;
+        private Lockless first;
+        private LockNode rest;
+        private LockNode prev;
 
-        public LockNode(Lockless first, LockNode rest, LockNode prev) {
+        LockNode(Lockless first, LockNode rest, LockNode prev) {
             this.first = first;
             this.rest = rest;
             this.prev = prev;
         }
 
         /* used to created sentinel node */
-        public LockNode() {
+        LockNode() {
             this.rest = this;
             this.prev = this;
         }
@@ -92,7 +92,7 @@ public class LinkedListDeque<Lockless> {
     public Lockless get(int index) {
         if (index < this.size && index >= 0) {
             LockNode point = this.sentinel;
-            for (int i=0; i<=index; i++) {
+            for (int i = 0; i <= index; i++) {
                 point = point.rest;
             }
             return point.first;
@@ -111,6 +111,6 @@ public class LinkedListDeque<Lockless> {
         if (index == 0) {
             return point.first;
         }
-        return this.getRecursive(point.rest, index-1);
+        return this.getRecursive(point.rest, index - 1);
     }
 }
