@@ -17,30 +17,30 @@ public class TestPalindrome {
 
     @Test
     public void testIsPalindrome() {
-        assertTrue(Palindrome.isPalindrome("aoa"));
-        assertTrue(Palindrome.isPalindrome("o"));
-        assertTrue(Palindrome.isPalindrome(""));
+        assertTrue(palindrome.isPalindrome("aoa"));
+        assertTrue(palindrome.isPalindrome("o"));
+        assertTrue(palindrome.isPalindrome(""));
 
-        assertFalse(Palindrome.isPalindrome("zxy"));
-        assertFalse(Palindrome.isPalindrome("zxyxxz"));
-        assertFalse(Palindrome.isPalindrome("Aoa"));
+        assertFalse(palindrome.isPalindrome("zxy"));
+        assertFalse(palindrome.isPalindrome("zxyxxz"));
+        assertFalse(palindrome.isPalindrome("Aoa"));
 
-        assertTrue(Palindrome.isPalindromeRecursive("aoa"));
-        assertTrue(Palindrome.isPalindromeRecursive("o"));
-        assertTrue(Palindrome.isPalindromeRecursive(""));
+        assertTrue(palindrome.isPalindromeRecursive("aoa"));
+        assertTrue(palindrome.isPalindromeRecursive("o"));
+        assertTrue(palindrome.isPalindromeRecursive(""));
 
-        assertFalse(Palindrome.isPalindromeRecursive("zxy"));
-        assertFalse(Palindrome.isPalindromeRecursive("Aoa"));
-        assertFalse(Palindrome.isPalindromeRecursive("zxyxxz"));
+        assertFalse(palindrome.isPalindromeRecursive("zxy"));
+        assertFalse(palindrome.isPalindromeRecursive("Aoa"));
+        assertFalse(palindrome.isPalindromeRecursive("zxyxxz"));
 
         CharacterComparator offByOne = new OffByOne();
-        assertTrue(Palindrome.isPalindrome("o", offByOne));
-        assertTrue(Palindrome.isPalindrome("", offByOne));
-        assertTrue(Palindrome.isPalindrome("zxy", offByOne));
-        assertTrue(Palindrome.isPalindrome("%&", offByOne));
+        assertTrue(palindrome.isPalindrome("o", offByOne));
+        assertTrue(palindrome.isPalindrome("", offByOne));
+        assertTrue(palindrome.isPalindrome("zxy", offByOne));
+        assertTrue(palindrome.isPalindrome("%&", offByOne));
 
-        assertFalse(Palindrome.isPalindrome("aoa", offByOne));
-        assertFalse(Palindrome.isPalindrome("Aoa", offByOne));
-        assertFalse(Palindrome.isPalindrome("zxyxxz", offByOne));
+        assertFalse(palindrome.isPalindrome("aoa", offByOne));
+        assertFalse(palindrome.isPalindrome("Aoa", offByOne));
+        assertFalse(palindrome.isPalindrome("zxyxxz", offByOne));
     }
 }
