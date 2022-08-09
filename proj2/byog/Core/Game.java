@@ -1,14 +1,14 @@
 package byog.Core;
 
-import byog.TileEngine.TERenderer;
+import java.util.Random;
 import byog.TileEngine.TETile;
 
 public class Game {
-    TERenderer ter = new TERenderer();
     /* Feel free to change the width and height. */
-    public static final int WIDTH = 80;
-    public static final int HEIGHT = 30;
+    private boolean saveFlag;
 
+    public Game() {
+    }
     /**
      * Method used for playing a fresh game. The game should start from the main menu.
      */
@@ -28,11 +28,72 @@ public class Game {
      * @return the 2D TETile[][] representing the state of the world
      */
     public TETile[][] playWithInputString(String input) {
-        // TODO: Fill out this method to run the game using the input passed in,
-        // and return a 2D tile representation of the world that would have been
-        // drawn if the same inputs had been given to playWithKeyboard().
-
-        TETile[][] finalWorldFrame = null;
+        World world;
+        if (input.equals("l")) {
+            world = loadWorld();
+        } else {
+            int seed = parseInputString(input);
+            world = new World(new Random(seed));
+            world.fillWithRandomRect();
+        }
+        world.render();
+        TETile[][] finalWorldFrame = world.tiles;
         return finalWorldFrame;
+    }
+
+    World loadWorld() {
+        return null;
+    }
+
+    /**
+     * parse the input string, including check if the input is legal
+     * and if the game should be saved or not and return a random integer
+     * as the seed for world according to the input string.
+     * @param str the input string, used to generate a seed and decide
+     *            weather to save the game or not.
+     * @return the random seed according to the given string.
+     */
+    int parseInputString(String str) {
+        if (parseBeginning(str)) {
+            if (parseEnding(str)) {
+                saveFlag = true;
+            }
+            String seedString = str.substring(1, str.length()-2);
+            return randomStrToRandomInt(seedString);
+        } else {
+            throw new RuntimeException("invalid input string");
+        }
+    }
+
+    int randomStrToRandomInt(String str) {
+        return Integer.parseInt(str);
+    }
+
+    /**
+     * return weather the str is beginning with letter n.
+     * @param str the str to be judged
+     * @return true or false
+     */
+    boolean parseBeginning(String str) {
+        char expect = 'n';
+        str = str.toLowerCase();
+        char actual = str.charAt(0);
+        return expect == actual;
+    }
+
+    /**
+     * return weather to save the game or not
+     * @param str the input string
+     * @return save or not
+     */
+    boolean parseEnding(String str) {
+        String expect = ":q";
+        String actual = str.substring(str.length()-2);
+        return actual.equals(expect);
+    }
+
+    public static void main(String[] args) {
+        Game game = new Game();
+        game.playWithInputString("");
     }
 }

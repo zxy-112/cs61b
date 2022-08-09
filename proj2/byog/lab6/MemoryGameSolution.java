@@ -8,6 +8,7 @@ import java.util.Random;
 
 public class MemoryGameSolution {
     private int width;
+    /* the width of game */
     private int height;
     private int round;
     private Random rand;
