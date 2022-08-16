@@ -3,6 +3,8 @@ package byog.TileEngine;
 import edu.princeton.cs.introcs.StdDraw;
 
 import java.awt.Color;
+import java.io.Serial;
+import java.io.Serializable;
 import java.awt.Font;
 
 /**
@@ -11,12 +13,14 @@ import java.awt.Font;
  * messing with this renderer, unless you're trying to do something fancy like
  * allowing scrolling of the screen or tracking the player or something similar.
  */
-public class TERenderer {
+public class TERenderer implements Serializable{
     private static final int TILE_SIZE = 16;
     private int width;
     private int height;
     private int xOffset;
     private int yOffset;
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     /**
      * Same functionality as the other initialization method. The only difference is that the xOff

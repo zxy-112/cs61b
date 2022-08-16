@@ -2,10 +2,22 @@ package byog.Core;
 
 import java.util.Random;
 import byog.TileEngine.TETile;
+import edu.princeton.cs.introcs.StdDraw;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
 public class Game {
     /* Feel free to change the width and height. */
     private boolean saveFlag;
+    private boolean exitFlag = false;
+    private boolean commandActivate = false;
+    private World world;
 
     public Game() {
     }
@@ -28,21 +40,100 @@ public class Game {
      * @return the 2D TETile[][] representing the state of the world
      */
     public TETile[][] playWithInputString(String input) {
-        World world;
         if (input.equals("l")) {
             world = loadWorld();
+            world.canvasInit();
+            saveFlag = true;
+            if (world == null) {
+                throw new RuntimeException("no archive found");
+            }
         } else {
             int seed = parseInputString(input);
             world = new World(new Random(seed));
             world.fillWithRandomRect();
         }
         world.render();
+        while (!exitFlag) {
+            if (StdDraw.hasNextKeyTyped()) {
+                char typedKey = StdDraw.nextKeyTyped();
+                processInputChar(typedKey);
+            }
+        }
         TETile[][] finalWorldFrame = world.tiles;
         return finalWorldFrame;
     }
 
     World loadWorld() {
+        File f = new File("./world.ser");
+        if (f.exists()) {
+            try {
+                FileInputStream fs = new FileInputStream(f);
+                ObjectInputStream os = new ObjectInputStream(fs);
+                World loadWorld = (World) os.readObject();
+                os.close();
+                return loadWorld;
+            } catch (FileNotFoundException e) {
+                System.out.println("file not found");
+                System.exit(0);
+            } catch (IOException e) {
+                System.out.println(e);
+                System.exit(0);
+            } catch (ClassNotFoundException e) {
+                System.out.println("class not found");
+                System.exit(0);
+            }
+        }
         return null;
+    }
+
+
+    void saveWorld() {
+        File f = new File("./world.ser");
+        try {
+            if (!f.exists()) {
+                f.createNewFile();
+            }
+            FileOutputStream fs = new FileOutputStream(f);
+            ObjectOutputStream os = new ObjectOutputStream(fs);
+            os.writeObject(world);
+            os.close();
+        }  catch (FileNotFoundException e) {
+            System.out.println("file not found");
+            System.exit(0);
+        } catch (IOException e) {
+            System.out.println(e);
+            System.exit(0);
+        }
+    }
+    void processInputChar(char input) {
+        if (commandActivate) {
+            if (input == 'q') {
+                if (saveFlag) {
+                    saveWorld();
+                }
+                exitFlag = true;
+            } else commandActivate = input == ':';
+        } else {
+            if (input == ':') {
+                commandActivate = true;
+            } else if (input == 'w') {
+                world.move(0, 1);
+            } else if (input == 'a') {
+                world.move(-1, 0);
+            } else if (input == 's') {
+                world.move(0, -1);
+            } else if (input == 'd') {
+                world.move(1, 0);
+            }
+            drawFrame(String.valueOf(input));
+        }
+    }
+
+    void drawFrame(String str) {
+        world.render();
+        StdDraw.setPenColor(StdDraw.WHITE);
+        StdDraw.textLeft(1, 2, str);
+        StdDraw.show();
     }
 
     /**
@@ -54,11 +145,14 @@ public class Game {
      * @return the random seed according to the given string.
      */
     int parseInputString(String str) {
+        String seedString;
         if (parseBeginning(str)) {
             if (parseEnding(str)) {
                 saveFlag = true;
+                seedString = str.substring(1, str.length()-2);
+            } else {
+                seedString = str.substring(1);
             }
-            String seedString = str.substring(1, str.length()-2);
             return randomStrToRandomInt(seedString);
         } else {
             throw new RuntimeException("invalid input string");
@@ -92,8 +186,10 @@ public class Game {
         return actual.equals(expect);
     }
 
+
     public static void main(String[] args) {
         Game game = new Game();
-        game.playWithInputString("");
+        game.playWithInputString("l");
+        System.exit(0);
     }
 }

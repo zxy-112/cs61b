@@ -1,15 +1,19 @@
 package byog.Core;
 
+import java.io.Serial;
 import java.util.Random;
+import java.io.Serializable;
 
 /**
  * the helper class for World class to generate world.
  */
-public class Rectangular {
+public class Rectangular implements  Serializable{
     int x;
     int y;
     int width;
     int height;
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     public Rectangular(int x, int y, int width, int height) {
         this.x = x;
@@ -53,8 +57,8 @@ public class Rectangular {
      * @return a random size neighbor rectangular
      */
     Rectangular randomNeighbor(Position pos, Random random) {
-        int width = RandomUtils.uniform(random, World.minRectSize, World.maxRectSize);
-        int height = RandomUtils.uniform(random, World.minRectSize, World.maxRectSize);
+        int width = RandomUtils.uniform(random, World.MIN_RECT_SIZE, World.MAX_RECT_SIZE);
+        int height = RandomUtils.uniform(random, World.MIN_RECT_SIZE, World.MAX_RECT_SIZE);
         if(pos.x == x) {
             int yOffset = -RandomUtils.uniform(random, height - 2);
             return new Rectangular(pos.x - width, pos.y - 1 + yOffset, width, height);

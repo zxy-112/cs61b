@@ -4,25 +4,34 @@ import byog.TileEngine.TERenderer;
 import byog.TileEngine.TETile;
 import byog.TileEngine.Tileset;
 
+import java.io.Serial;
+import java.io.Serializable;
+
 import java.util.Random;
 
-public class World {
+public class World implements Serializable{
 
     public static final int WIDTH = 80;
     public static final int HEIGHT = 30;
-    public static final int maxRectSize = 8;
-    public static final int minRectSize = 3;
-    public static final int density = 7;
+    public static final int MAX_RECT_SIZE = 8;
+    public static final int MIN_RECT_SIZE = 3;
+    public static final int DENSITY = 7;
     TETile[][] tiles = new TETile[WIDTH][HEIGHT];
+    Position playerPos;
     Random random;
     TERenderer ter = new TERenderer();
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     public World(Random random) {
-        ter.initialize(WIDTH, HEIGHT);
+        ter.initialize(WIDTH + 10, HEIGHT, 10, 0);
         this.random = random;
         fillWithNothing();
     }
 
+    void canvasInit() {
+        ter.initialize(WIDTH + 10, HEIGHT, 10, 0);
+    }
     /**
      * fill all the tiles with nothing.
      */
@@ -64,15 +73,33 @@ public class World {
      * @return the generated initial rectangular.
      */
     Rectangular initRect() {
-        int width = RandomUtils.uniform(random, minRectSize, maxRectSize);
-        int height = RandomUtils.uniform(random, minRectSize, maxRectSize);
+        int width = RandomUtils.uniform(random, MIN_RECT_SIZE, MAX_RECT_SIZE);
+        int height = RandomUtils.uniform(random, MIN_RECT_SIZE, MAX_RECT_SIZE);
         int maxX = WIDTH - width;
         int maxY = HEIGHT - height;
         int x = RandomUtils.uniform(random, maxX);
         int y = RandomUtils.uniform(random, maxY);
         Rectangular res = new Rectangular(x, y, width, height);
         addRectangular(res);
+        int playerX = RandomUtils.uniform(random, width-2) + x + 1;
+        int playerY = RandomUtils.uniform(random, height - 2) + y + 1;
+        playerPos = new Position(playerX, playerY);
+        changePos(playerPos);
         return res;
+    }
+
+    void changePos(Position newPos) {
+        if (tiles[newPos.x][newPos.y] != Tileset.FLOOR) {
+            return;
+        }
+        tiles[playerPos.x][playerPos.y] = Tileset.FLOOR;
+        tiles[newPos.x][newPos.y] = Tileset.PLAYER;
+        playerPos = newPos;
+    }
+
+    void move(int diffX, int diffY) {
+        Position newPos = new Position(playerPos.x + diffX, playerPos.y + diffY);
+        changePos(newPos);
     }
 
     /**
@@ -81,7 +108,7 @@ public class World {
      * @param rect the rectangular to be expanded
      */
     void expandRect(Rectangular rect) {
-        for (int m = 0; m < density; m = m + 1) {
+        for (int m = 0; m < DENSITY; m = m + 1) {
             Position newPos = rect.pickPosition(random);
             Rectangular newRect = rect.randomNeighbor(newPos, random);
             if (canPlace(newRect)) {
@@ -108,6 +135,15 @@ public class World {
             tiles[pos.x][pos.y + 1] = Tileset.FLOOR;
         }
         tiles[pos.x][pos.y] = Tileset.FLOOR;
+    }
+
+    void printTiles() {
+        for (TETile[] tile : tiles) {
+            for (int j = 0; j < tiles[0].length; j = j + 1) {
+                System.out.print(tile[j].character());
+            }
+            System.out.println();
+        }
     }
 
     /**
