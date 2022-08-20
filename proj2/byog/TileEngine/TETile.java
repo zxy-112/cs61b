@@ -1,7 +1,6 @@
 package byog.TileEngine;
 
 import java.awt.Color;
-import java.io.Serial;
 import java.util.Arrays;
 import java.util.Random;
 import java.io.Serializable;
@@ -29,7 +28,6 @@ public class TETile implements Serializable{
     private final Color backgroundColor;
     private final String description;
     private final String filepath;
-    @Serial
     private static final long serialVersionUID = 1L;
 
     /**

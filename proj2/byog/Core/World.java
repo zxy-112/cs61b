@@ -4,7 +4,6 @@ import byog.TileEngine.TERenderer;
 import byog.TileEngine.TETile;
 import byog.TileEngine.Tileset;
 
-import java.io.Serial;
 import java.io.Serializable;
 
 import java.util.Random;
@@ -20,7 +19,6 @@ public class World implements Serializable{
     Position playerPos;
     Random random;
     TERenderer ter = new TERenderer();
-    @Serial
     private static final long serialVersionUID = 1L;
 
     public World(Random random) {
@@ -89,7 +87,7 @@ public class World implements Serializable{
     }
 
     void changePos(Position newPos) {
-        if (tiles[newPos.x][newPos.y] != Tileset.FLOOR) {
+        if (!tiles[newPos.x][newPos.y].equals(Tileset.FLOOR)) {
             return;
         }
         tiles[playerPos.x][playerPos.y] = Tileset.FLOOR;

@@ -1,6 +1,5 @@
 package byog.Core;
 
-import java.io.Serial;
 import java.util.Random;
 import java.io.Serializable;
 
@@ -12,7 +11,6 @@ public class Rectangular implements  Serializable{
     int y;
     int width;
     int height;
-    @Serial
     private static final long serialVersionUID = 1L;
 
     public Rectangular(int x, int y, int width, int height) {

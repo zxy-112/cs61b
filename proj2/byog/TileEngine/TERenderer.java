@@ -3,7 +3,6 @@ package byog.TileEngine;
 import edu.princeton.cs.introcs.StdDraw;
 
 import java.awt.Color;
-import java.io.Serial;
 import java.io.Serializable;
 import java.awt.Font;
 
@@ -19,7 +18,6 @@ public class TERenderer implements Serializable{
     private int height;
     private int xOffset;
     private int yOffset;
-    @Serial
     private static final long serialVersionUID = 1L;
 
     /**
