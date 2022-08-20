@@ -35,4 +35,11 @@ public class TestGame {
             assertTrue(atEdge && !atVertex);
         }
     }
+
+    @Test
+    public void parseInputString() {
+        Game game = new Game();
+        int actual = game.randomStrToRandomInt("4");
+        System.out.println(actual);
+    }
 }

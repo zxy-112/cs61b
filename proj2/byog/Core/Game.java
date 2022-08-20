@@ -205,7 +205,7 @@ public class Game {
     int randomStrToRandomInt(String str) {
         StringBuilder sb = new StringBuilder();
         for (int m = 0; m < str.length(); m = m + 1) {
-                sb.append((int) str.charAt(m));
+                sb.append(((int) str.charAt(m)) % 10 + 1);
             }
         return Integer.parseInt(sb.toString());
     }
