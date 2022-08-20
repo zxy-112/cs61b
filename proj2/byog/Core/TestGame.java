@@ -39,7 +39,7 @@ public class TestGame {
     @Test
     public void parseInputString() {
         Game game = new Game();
-        int actual = game.randomStrToRandomInt("4");
+        int actual = game.randomStrToRandomInt("53495755565648565251535457485149545251115");
         System.out.println(actual);
     }
 }

@@ -203,11 +203,11 @@ public class Game {
      * @return the int seed
      */
     int randomStrToRandomInt(String str) {
-        StringBuilder sb = new StringBuilder();
+        int res = 0;
         for (int m = 0; m < str.length(); m = m + 1) {
-                sb.append(((int) str.charAt(m)) % 10 + 1);
+                res = res + (int) str.charAt(m) + m;
             }
-        return Integer.parseInt(sb.toString());
+        return res;
     }
 
     /**
