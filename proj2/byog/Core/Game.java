@@ -1,6 +1,8 @@
 package byog.Core;
 
 import java.util.Random;
+
+import byog.TileEngine.TERenderer;
 import byog.TileEngine.TETile;
 import edu.princeton.cs.introcs.StdDraw;
 
@@ -18,7 +20,10 @@ import java.io.ObjectOutputStream;
  * {@code @description} the game class
  */
 public class Game {
+    TERenderer ter = new TERenderer();
     /* Feel free to change the width and height. */
+    public static final int WIDTH = 80;
+    public static final int HEIGHT = 30;
     /** save the game or not.*/
     private boolean saveFlag;
     /** exit the game or not.*/
@@ -205,8 +210,8 @@ public class Game {
     int randomStrToRandomInt(String str) {
         int res = 0;
         for (int m = 0; m < str.length(); m = m + 1) {
-                res = res + (int) str.charAt(m) + m;
-            }
+            res = res + (int) str.charAt(m) + m;
+        }
         return res;
     }
 
