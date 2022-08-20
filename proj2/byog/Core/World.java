@@ -8,7 +8,7 @@ import java.io.Serializable;
 
 import java.util.Random;
 
-public class World implements Serializable{
+public class World implements Serializable {
 
     public static final int WIDTH = 80;
     public static final int HEIGHT = 30;
@@ -55,7 +55,7 @@ public class World implements Serializable{
      * @param rectangular the rectangular that will be added to tiles
      */
     void addRectangular(Rectangular rectangular) {
-        for(int m = 0; m < rectangular.width; m = m + 1) {
+        for (int m = 0; m < rectangular.width; m = m + 1) {
             for (int n = 0; n < rectangular.height; n = n + 1) {
                 if (m == 0 || m == rectangular.width - 1 || n == 0 || n == rectangular.height - 1) {
                     tiles[rectangular.x + m][rectangular.y + n] = Tileset.WALL;
@@ -79,7 +79,7 @@ public class World implements Serializable{
         int y = RandomUtils.uniform(random, maxY);
         Rectangular res = new Rectangular(x, y, width, height);
         addRectangular(res);
-        int playerX = RandomUtils.uniform(random, width-2) + x + 1;
+        int playerX = RandomUtils.uniform(random, width - 2) + x + 1;
         int playerY = RandomUtils.uniform(random, height - 2) + y + 1;
         playerPos = new Position(playerX, playerY);
         changePos(playerPos);

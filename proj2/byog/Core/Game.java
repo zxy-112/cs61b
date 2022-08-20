@@ -12,30 +12,48 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+/**
+ * @author 77584
+ * {@code @createDate} 2022/8/20
+ * {@code @description} the game class
+ */
 public class Game {
     /* Feel free to change the width and height. */
+    /** save the game or not.*/
     private boolean saveFlag;
+    /** exit the game or not.*/
     private boolean exitFlag = false;
+    /** if current input char is command or not.*/
     private boolean commandActivate = false;
+    /** the world.*/
     private World world;
 
+    /**
+     * create a game instance.
+     */
     public Game() {
     }
     /**
-     * Method used for playing a fresh game. The game should start from the main menu.
+     * Method used for playing a fresh game. The game should start
+     * from the main menu.
      */
     public void playWithKeyboard() {
     }
 
     /**
-     * Method used for autograding and testing the game code. The input string will be a series
-     * of characters (for example, "n123sswwdasdassadwas", "n123sss:q", "lwww". The game should
-     * behave exactly as if the user typed these characters into the game after playing
-     * playWithKeyboard. If the string ends in ":q", the same world should be returned as if the
-     * string did not end with q. For example "n123sss" and "n123sss:q" should return the same
-     * world. However, the behavior is slightly different. After playing with "n123sss:q", the game
-     * should save, and thus if we then called playWithInputString with the string "l", we'd expect
-     * to get the exact same world back again, since this corresponds to loading the saved game.
+     * Method used for autograding and testing the game code.
+     * The input string will be a series of characters (for
+     * example, "n123sswwdasdassadwas", "n123sss:q", "lwww".
+     * The game should behave exactly as if the user typed
+     * these characters into the game after playing playWithKeyboard.
+     * If the string ends in ":q", the same world should be returned
+     * as if the string did not end with q. For example "n123sss"
+     * and "n123sss:q" should return the same world. However, the
+     * behavior is slightly different. After playing with "n123sss:q",
+     * the game should save, and thus if we then called
+     * playWithInputString with the string "l", we'd expect
+     * to get the exact same world back again, since this corresponds to
+     * loading the saved game.
      * @param input the input string to feed to your program
      * @return the 2D TETile[][] representing the state of the world
      */
@@ -63,6 +81,10 @@ public class Game {
         return finalWorldFrame;
     }
 
+    /**
+     * load the saved world.
+     * @return the loaded instance
+     */
     World loadWorld() {
         File f = new File("./world.ser");
         if (f.exists()) {
@@ -87,6 +109,9 @@ public class Game {
     }
 
 
+    /**
+     * the method to save the world.
+     */
     void saveWorld() {
         File f = new File("./world.ser");
         try {
@@ -105,6 +130,11 @@ public class Game {
             System.exit(0);
         }
     }
+
+    /**
+     * process the input of the player.
+     * @param input the input char of player
+     */
     void processInputChar(char input) {
         if (commandActivate) {
             if (input == 'q') {
@@ -112,7 +142,9 @@ public class Game {
                     saveWorld();
                 }
                 exitFlag = true;
-            } else commandActivate = input == ':';
+            } else {
+                commandActivate = input == ':';
+            }
         } else {
             if (input == ':') {
                 commandActivate = true;
@@ -125,10 +157,15 @@ public class Game {
             } else if (input == 'd') {
                 world.move(1, 0);
             }
-            drawFrame(String.valueOf(input));
         }
+        drawFrame(String.valueOf(input));
     }
 
+    /**
+     * render the world and display some information.
+     * @param str the string to be displayed, what the player
+     *            has inputted
+     */
     void drawFrame(String str) {
         world.render();
         StdDraw.setPenColor(StdDraw.WHITE);
@@ -149,7 +186,7 @@ public class Game {
         if (parseBeginning(str)) {
             if (parseEnding(str)) {
                 saveFlag = true;
-                seedString = str.substring(1, str.length()-2);
+                seedString = str.substring(1, str.length() - 2);
             } else {
                 seedString = str.substring(1);
             }
@@ -159,6 +196,12 @@ public class Game {
         }
     }
 
+    /**
+     * cat the string seed to int.
+     * @param str the string seed whose 'n' and ':q' has been
+     *            removed
+     * @return the int seed
+     */
     int randomStrToRandomInt(String str) {
         return Integer.parseInt(str);
     }
@@ -176,20 +219,14 @@ public class Game {
     }
 
     /**
-     * return weather to save the game or not
+     * return weather to save the game or not.
      * @param str the input string
      * @return save or not
      */
     boolean parseEnding(String str) {
         String expect = ":q";
-        String actual = str.substring(str.length()-2);
+        String actual = str.substring(str.length() - 2);
         return actual.equals(expect);
     }
 
-
-    public static void main(String[] args) {
-        Game game = new Game();
-        game.playWithInputString("l");
-        System.exit(0);
-    }
 }
