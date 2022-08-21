@@ -39,6 +39,10 @@ public class Game {
     private boolean exitFlag;
     /** if : has been typed.*/
     private boolean commandActivate;
+    /** the x offset of the world in the canvas.*/
+    public static final int XOFF = 10;
+    /** the last rect when expand rect.*/
+    private Rectangular lastOne;
 
     public Game() {
         exitFlag = false;
@@ -66,14 +70,17 @@ public class Game {
         // and return a 2D tile representation of the world that would have been
         // drawn if the same inputs had been given to playWithKeyboard().
         parseString(input);
-        ter.initialize(WIDTH, HEIGHT);
+        ter.initialize(WIDTH + XOFF, HEIGHT, XOFF, 0);
         ter.renderFrame(tiles);
 
         while (!exitFlag) {
+            double mouseX = StdDraw.mouseX();
+            double mouseY = StdDraw.mouseY();
             if (StdDraw.hasNextKeyTyped()) {
                 char typed = StdDraw.nextKeyTyped();
                 processInputChar(typed);
             }
+            StdDraw.show();
         }
 
         TETile[][] finalWorldFrame = tiles;
@@ -213,6 +220,13 @@ public class Game {
         fillWithNothing(tiles);
         initializeRect();
         expandRect(initRect);
+        while (true) {
+            Position doorPos = lastOne.pickPosition(random);
+            if (tiles[doorPos.x][doorPos.y].equals(Tileset.WALL)) {
+                tiles[doorPos.x][doorPos.y] = Tileset.LOCKED_DOOR;
+                break;
+            }
+        }
     }
 
     /**
@@ -278,6 +292,7 @@ public class Game {
             Position pos = rect.pickPosition(random);
             Rectangular neighbor = rect.randomNeighbor(pos, random);
             if (canPlace(neighbor)) {
+                lastOne = neighbor;
                 addRect(neighbor);
                 digPassage(rect, pos);
                 expandRect(neighbor);
