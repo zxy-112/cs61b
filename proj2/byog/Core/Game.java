@@ -43,6 +43,7 @@ public class Game {
     public static final int XOFF = 10;
     /** the last rect when expand rect.*/
     private Rectangular lastOne;
+    String lastInfo = "";
 
     public Game() {
         exitFlag = false;
@@ -74,13 +75,11 @@ public class Game {
         ter.renderFrame(tiles);
 
         while (!exitFlag) {
-            double mouseX = StdDraw.mouseX();
-            double mouseY = StdDraw.mouseY();
             if (StdDraw.hasNextKeyTyped()) {
                 char typed = StdDraw.nextKeyTyped();
                 processInputChar(typed);
             }
-            StdDraw.show();
+            showInfo();
         }
 
         TETile[][] finalWorldFrame = tiles;
@@ -136,6 +135,20 @@ public class Game {
             } catch (ClassNotFoundException e) {
                 System.out.println("class not found");
                 System.exit(0);
+            }
+        }
+    }
+
+    void showInfo() {
+        int mouseX = (int) StdDraw.mouseX() - XOFF;
+        int mouseY = (int) StdDraw.mouseY();
+        if (mouseY >= 0 && mouseY < HEIGHT && mouseX >= 0 && mouseX < WIDTH) {
+            if (!tiles[mouseX][mouseY].description().equals(lastInfo)) {
+                lastInfo = tiles[mouseX][mouseY].description();
+                ter.renderFrame(tiles);
+                StdDraw.setPenColor(StdDraw.RED);
+                StdDraw.textLeft(2, HEIGHT - 2, tiles[mouseX][mouseY].description());
+                StdDraw.show();
             }
         }
     }
