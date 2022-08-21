@@ -4,7 +4,6 @@ import byog.SaveDemo.World;
 import byog.TileEngine.TERenderer;
 import byog.TileEngine.TETile;
 import byog.TileEngine.Tileset;
-import edu.princeton.cs.introcs.StdDraw;
 
 import java.io.*;
 import java.util.Arrays;
@@ -68,13 +67,6 @@ public class Game {
         parseString(input);
         ter.initialize(WIDTH, HEIGHT);
         ter.renderFrame(tiles);
-
-        while (!exitFlag) {
-            if (StdDraw.hasNextKeyTyped()) {
-                char typed = StdDraw.nextKeyTyped();
-                processInputChar(typed);
-            }
-        }
 
         TETile[][] finalWorldFrame = tiles;
         return finalWorldFrame;
