@@ -186,7 +186,7 @@ public class Game {
         random = new Random(0);
         for (char seedChar: seedString.toCharArray()) {
             for (int m = 0; m < (int) seedChar - 40; m = m + 1) {
-                random = new Random(random.nextLong(Long.MAX_VALUE));
+                random = new Random(random.nextLong());
             }
         }
     }
