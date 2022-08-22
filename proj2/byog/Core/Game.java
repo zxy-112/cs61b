@@ -18,8 +18,6 @@ public class Game {
     public static final int HEIGHT = 30;
     /** the random instance of the world.*/
     private Random random;
-    /** the seed of the world.*/
-    private int seed;
     /** the TETile array that represents the world.*/
     TETile[][] tiles;
     /** save the game or not when exited.*/
@@ -185,16 +183,12 @@ public class Game {
      * @param seedString the seedString that from the input.
      */
     void parseSeedString(String seedString) {
-        seed = strToInt(seedString);
-        random = new Random(seed);
-    }
-
-    int strToInt(String str) {
-        int res = 0;
-        for (char m: str.toCharArray()) {
-            res = res + (int) m % RandomUtils.uniform(new Random(0), 5, 10);
+        random = new Random(0);
+        for (char seedChar: seedString.toCharArray()) {
+            for (int m = 0; m < (int) seedChar; m = m + 1) {
+                random = new Random(random.nextLong(Long.MAX_VALUE));
+            }
         }
-        return res;
     }
 
     /**
