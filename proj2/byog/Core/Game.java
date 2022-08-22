@@ -16,8 +16,6 @@ public class Game {
     public static final int WIDTH = 80;
     /** the height of the world. */
     public static final int HEIGHT = 30;
-    /** the random instance of the world.*/
-    private Random random;
     /** the TETile array that represents the world.*/
     TETile[][] tiles;
     /** save the game or not when exited.*/
@@ -36,6 +34,10 @@ public class Game {
     private boolean exitFlag;
     /** if : has been typed.*/
     private boolean commandActivate;
+    /** the current used random index.*/
+    private int curRandomIndex = 0;
+    /** all the random instance.*/
+    private Random[] randoms;
 
     public Game() {
         exitFlag = false;
@@ -183,12 +185,16 @@ public class Game {
      * @param seedString the seedString that from the input.
      */
     void parseSeedString(String seedString) {
-        random = new Random(0);
-        for (char seedChar: seedString.toCharArray()) {
-            for (int m = 0; m < (int) seedChar - 40; m = m + 1) {
-                random = new Random(random.nextLong());
-            }
+        randoms = new Random[seedString.length()];
+        for (int m = 0; m < seedString.length(); m = m + 1) {
+            randoms[m] = new Random((int) seedString.charAt(m));
         }
+    }
+
+    Random nextRandom() {
+        Random res = randoms[curRandomIndex];
+        curRandomIndex = (curRandomIndex + 1) % randoms.length;
+        return res;
     }
 
     /**
@@ -216,6 +222,7 @@ public class Game {
      * and add the player.
      */
     void initializeRect() {
+        Random random = nextRandom();
         int rectX = RandomUtils.uniform(random, WIDTH - MAXSIZE);
         int rectY = RandomUtils.uniform(random, HEIGHT - MAXSIZE);
         int rectWidth = RandomUtils.uniform(random, MINSIZE, MAXSIZE);
@@ -260,6 +267,7 @@ public class Game {
      * @param rect which rect to expand.
      */
     void expandRect(Rectangular rect) {
+        Random random = nextRandom();
         for (int m = 0; m < DENSITY; m = m + 1) {
             Position pos = rect.pickPosition(random);
             Rectangular neighbor = rect.randomNeighbor(pos, random);
