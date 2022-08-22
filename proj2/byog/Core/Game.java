@@ -65,8 +65,6 @@ public class Game {
         // and return a 2D tile representation of the world that would have been
         // drawn if the same inputs had been given to playWithKeyboard().
         parseString(input);
-        ter.initialize(WIDTH, HEIGHT);
-        ter.renderFrame(tiles);
 
         TETile[][] finalWorldFrame = tiles;
         return finalWorldFrame;
@@ -77,21 +75,31 @@ public class Game {
      * @param str the input string
      */
     public void parseString(String str) {
-        if (str.equals("l")) {
+        if (str.charAt(0) == 'l') {
             saveFlag = true;
             loadGame();
-        } else if (str.charAt(0) == 'n' || str.charAt(1) == 'N') {
-            String tailString = str.substring(str.length()-2);
-            String seedString;
-            if (tailString.equals(":q")) {
-                saveFlag = true;
-                seedString = str.substring(1, str.length()-2);
-            } else {
-                saveFlag = false;
-                seedString = str.substring(1);
+            for (char charInput: str.substring(1).toCharArray()) {
+                processInputChar(charInput);
             }
+        } else if (str.charAt(0) == 'n' || str.charAt(1) == 'N') {
+            int index = -1;
+            for (char charInput: str.toCharArray()) {
+                index = index + 1;
+                if (charInput == 's') {
+                    break;
+                }
+            }
+            String tailString = str.substring(str.length()-2);
+            String seedString = str.substring(1, index);
+            String actString = str.substring(index+1);
+            saveFlag = tailString.equals(":q");
             parseSeedString(seedString);
             generateWorld();
+            for (char actChar: actString.toCharArray()) {
+                processInputChar(actChar);
+            }
+        } else if (str.charAt(0) == 'q') {
+            System.exit(0);
         } else {
             throw new RuntimeException("input string should start with n");
         }
