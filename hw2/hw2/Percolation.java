@@ -9,8 +9,7 @@ public class Percolation {
     private final boolean[][] sites;
     private int numberOfOpenSites;
     private final WeightedQuickUnionUF unions;
-    private final ArrayList<Integer> openedUpper;
-    private final ArrayList<Integer> openedBottom;
+    final int totalSites;
 
     /**
      * maker a percolation with size of sites being n.
@@ -27,9 +26,8 @@ public class Percolation {
             }
         }
         numberOfOpenSites = 0;
-        unions = new WeightedQuickUnionUF(n * n);
-        openedUpper = new ArrayList<>(n);
-        openedBottom = new ArrayList<>(n);
+        unions = new WeightedQuickUnionUF(n * n + 3);
+        totalSites = n * n;
     }
 
     /**
@@ -64,10 +62,10 @@ public class Percolation {
                     }
                 }
                 if (row == 0) {
-                    openedUpper.add(currentId);
+                    unions.union(totalSites, currentId);
                 }
                 if (row == sites.length - 1) {
-                    openedBottom.add(currentId);
+                    unions.union(totalSites+1, currentId);
                 }
 
             }
@@ -93,18 +91,13 @@ public class Percolation {
 
     public boolean isFull(int row, int col) {
         if (checkIndex(row) && checkIndex(col)) {
-            for (int m: openedUpper) {
-                if (unions.connected(id(0, m), id(row, col))) {
-                    return true;
-                }
-            }
-            return false;
+            return unions.connected(id(row, col), totalSites);
         } else {
             throw new java.lang.IndexOutOfBoundsException();
         }
     }
 
-    int id(int row, int col) {
+    private int id(int row, int col) {
         return row * sites.length + col;
     }
 
@@ -113,7 +106,7 @@ public class Percolation {
      * @param index the index to be checked.
      * @return true or false.
      */
-    boolean checkIndex(int index) {
+    private boolean checkIndex(int index) {
         return index >= 0 && index < sites.length;
     }
 
@@ -122,11 +115,10 @@ public class Percolation {
     }
 
     public boolean percolates() {
-        for (int m: openedBottom) {
-            if (isFull(m/sites.length, m%sites.length)) {
-                return true;
-            }
-        }
-        return false;
+        return unions.connected(totalSites, totalSites+1);
+    }
+
+    public static void main(String[] args) {
+
     }
 }

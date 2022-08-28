@@ -7,12 +7,15 @@ import edu.princeton.cs.introcs.StdRandom;
 
 public class PercolationStats {
 
-    private double mean;
-    private double stddev;
-    private double confidenceLow;
-    private double confidenceHigh;
+    private final double mean;
+    private final double stddev;
+    private final double confidenceLow;
+    private final double confidenceHigh;
 
     public PercolationStats(int n, int t, PercolationFactory pf) {
+        if (n <= 0) {
+            throw new IllegalArgumentException();
+        }
         int sitesNumber = n * n;
         double[] percentages = new double[t];
         for (int m = 0; m < t; m = m + 1) {
