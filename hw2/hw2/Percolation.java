@@ -9,6 +9,7 @@ public class Percolation {
     private final boolean[][] sites;
     private int numberOfOpenSites;
     private final WeightedQuickUnionUF unions;
+    private final WeightedQuickUnionUF unions2;
     final int totalSites;
 
     /**
@@ -26,7 +27,8 @@ public class Percolation {
             }
         }
         numberOfOpenSites = 0;
-        unions = new WeightedQuickUnionUF(n * n + 3);
+        unions = new WeightedQuickUnionUF(n * n + 2);
+        unions2 = new WeightedQuickUnionUF(n * n + 1);
         totalSites = n * n;
     }
 
@@ -44,25 +46,30 @@ public class Percolation {
                 if (checkIndex(row-1)) {
                     if (isOpen(row-1, col)) {
                         unions.union(id(row-1, col), currentId);
+                        unions2.union(id(row-1, col), currentId);
                     }
                 }
                 if (checkIndex(row+1)) {
                     if (isOpen(row+1, col)) {
                         unions.union(id(row+1, col), currentId);
+                        unions2.union(id(row+1, col), currentId);
                     }
                 }
                 if (checkIndex(col-1)) {
                     if (isOpen(row, col-1)) {
                         unions.union(id(row, col-1), currentId);
+                        unions2.union(id(row, col-1), currentId);
                     }
                 }
                 if (checkIndex(col+1)) {
                     if (isOpen(row, col+1)) {
                         unions.union(id(row, col+1), currentId);
+                        unions2.union(id(row, col+1), currentId);
                     }
                 }
                 if (row == 0) {
                     unions.union(totalSites, currentId);
+                    unions2.union(totalSites, currentId);
                 }
                 if (row == sites.length - 1) {
                     unions.union(totalSites+1, currentId);
@@ -91,7 +98,7 @@ public class Percolation {
 
     public boolean isFull(int row, int col) {
         if (checkIndex(row) && checkIndex(col)) {
-            return unions.connected(id(row, col), totalSites);
+            return unions2.connected(id(row, col), totalSites);
         } else {
             throw new java.lang.IndexOutOfBoundsException();
         }
