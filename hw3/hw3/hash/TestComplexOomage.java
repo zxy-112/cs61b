@@ -49,7 +49,7 @@ public class TestComplexOomage {
             deadlyList.add(new ComplexOomage(paraList));
         }
 
-        assertTrue(OomageTestUtility.haveNiceHashCodeSpread(deadlyList, 32));
+        assertTrue(OomageTestUtility.haveNiceHashCodeSpread(deadlyList, 10));
     }
 
     /** Calls tests for SimpleOomage. */
