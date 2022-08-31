@@ -74,6 +74,7 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
         ArrayMap<K, V>[] newBuckets = new ArrayMap[buckets.length*2];
         ArrayMap<K, V>[] oldBuckets = buckets;
         buckets = newBuckets;
+        this.clear();
         for (ArrayMap<K, V> bucket: oldBuckets) {
             for (K key: bucket) {
                 put(key, bucket.get(key));
