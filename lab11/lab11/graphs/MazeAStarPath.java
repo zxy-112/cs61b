@@ -1,5 +1,8 @@
 package lab11.graphs;
 
+import java.util.Comparator;
+import java.util.PriorityQueue;
+
 /**
  *  @author Josh Hug
  */
@@ -20,7 +23,7 @@ public class MazeAStarPath extends MazeExplorer {
 
     /** Estimate of the distance from v to the target. */
     private int h(int v) {
-        return -1;
+        return Math.abs(maze.toX(v) - maze.toX(t)) + Math.abs(maze.toY(v) - maze.toY(t));
     }
 
     /** Finds vertex estimated to be closest to target. */
@@ -31,7 +34,41 @@ public class MazeAStarPath extends MazeExplorer {
 
     /** Performs an A star search from vertex s. */
     private void astar(int s) {
-        // TODO
+        PriorityQueue<Integer> explorerQueue = new PriorityQueue<>(new MazeAStarPath.distanceComparator());
+        explorerQueue.add(s);
+        int current;
+        while (!explorerQueue.isEmpty() && !targetFound) {
+            current = explorerQueue.remove();
+            if (marked[current]) {
+                continue;
+            }
+            marked[current] = true;
+            announce();
+            for (int neighbor: maze.adj(current)) {
+                if (marked[neighbor]) {
+                    continue;
+                }
+                if (neighbor == t) {
+                    edgeTo[neighbor] = current;
+                    announce();
+                    return;
+                }
+                if (distTo[current] + 1 < distTo[neighbor]) {
+                    edgeTo[neighbor] = current;
+                    distTo[neighbor] = distTo[current] + 1;
+                    explorerQueue.add(neighbor);
+                    announce();
+                }
+            }
+        }
+    }
+
+    class distanceComparator implements Comparator<Integer> {
+
+        @Override
+        public int compare(Integer o1, Integer o2) {
+            return Integer.compare(distTo[o1] + h(o1), distTo[o2] + h(o2));
+        }
     }
 
     @Override
