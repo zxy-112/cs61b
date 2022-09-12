@@ -1,5 +1,4 @@
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,7 +24,68 @@ public class Router {
      */
     public static List<Long> shortestPath(GraphDB g, double stlon, double stlat,
                                           double destlon, double destlat) {
-        return null; // FIXME
+        long begin = g.closest(stlon, stlat);
+        long end = g.closest(destlon, destlat);
+
+        Set<Long> marked = new HashSet<>();
+        Map<Long, Long> edgeTo = new HashMap<>();
+        Map<Long, Double> distanceTo = new HashMap<>();
+        PriorityQueue<Long> searchQueue = new PriorityQueue<>(new DistanceComparator(g, end, distanceTo));
+        edgeTo.put(begin, begin);
+        distanceTo.put(begin, 0.);
+        searchQueue.add(begin);
+        labelA:
+        while (!searchQueue.isEmpty()) {
+            long current = searchQueue.remove();
+            marked.add(current);
+            for (long neighbor: g.adjacent(current)) {
+                if (marked.contains(neighbor)) {
+                    continue;
+                }
+                double newDistance = distanceTo.get(current) + g.distance(current, neighbor);
+                if (distanceTo.containsKey(neighbor)) {
+                    if (newDistance < distanceTo.get(neighbor)) {
+                        distanceTo.put(neighbor, newDistance);
+                        edgeTo.put(neighbor, current);
+                        searchQueue.add(neighbor);
+                    }
+                } else {
+                    distanceTo.put(neighbor, newDistance);
+                    edgeTo.put(neighbor, current);
+                    searchQueue.add(neighbor);
+                }
+                if (neighbor == end) {
+                    break labelA;
+                }
+            }
+        }
+
+        List<Long> res = new ArrayList<>();
+        long current = end;
+        while (current != begin) {
+            res.add(0, current);
+            current = edgeTo.get(current);
+        }
+        res.add(0, current);
+        return res;
+    }
+
+    static class DistanceComparator implements Comparator<Long> {
+
+        GraphDB g;
+        long end;
+        Map<Long, Double> distanceTo;
+        DistanceComparator(GraphDB g, long target, Map<Long, Double> distanceTo) {
+            this.g = g;
+            this.end = target;
+            this.distanceTo = distanceTo;
+        }
+        @Override
+        public int compare(Long o1, Long o2) {
+            double distance1 = g.distance(o1, end) + distanceTo.get(o1);
+            double distance2 = g.distance(o2, end) + distanceTo.get(o2);
+            return Double.compare(distance1, distance2);
+        }
     }
 
     /**
@@ -37,7 +97,51 @@ public class Router {
      * route.
      */
     public static List<NavigationDirection> routeDirections(GraphDB g, List<Long> route) {
-        return null; // FIXME
+        List<NavigationDirection> res = new ArrayList<>();
+        if (route.size() > 1) {
+            long v1 = route.get(0);
+            for (int m = 0; m < route.size() - 1; m += 1) {
+                long v2 = route.get(m);
+                long v3 = route.get(m+1);
+                NavigationDirection temp = new NavigationDirection();
+                temp.direction = direction(g, v1, v2, v3);
+                v1 = v2;
+                temp.distance = g.distance(v2, v3);
+                temp.way = g.idNodeMap.get(v2).neighbors.get(v3).extraInfo.get("name");
+                if (temp.way == null) {
+                    temp.way = NavigationDirection.UNKNOWN_ROAD;
+                }
+                res.add(temp);
+            }
+        }
+        return res;
+    }
+
+    static int direction(GraphDB g, long v1, long v2, long v3) {
+        if (v1 == v2) {
+            return NavigationDirection.STRAIGHT;
+        }
+        double dx1 = g.lon(v2) - g.lon(v1);
+        double dy1 = g.lat(v2) - g.lat(v1);
+        double dx2 = g.lon(v3) - g.lon(v2);
+        double dy2 = g.lat(v3) - g.lat(v2);
+        double angle1 = Math.atan(dy1 / dx1);
+        double angle2 = Math.atan(dy2 / dx2);
+        double dAngle = angle2 - angle1;
+        if (dAngle <= 60 && dAngle > 10) {
+            return NavigationDirection.SLIGHT_LEFT;
+        } else if (dAngle <= 10 && dAngle >= - 10) {
+            return NavigationDirection.STRAIGHT;
+        } else if (dAngle >= - 60 && dAngle < -10) {
+            return NavigationDirection.SLIGHT_RIGHT;
+        } else if (dAngle > 60 && dAngle <= 120) {
+            return NavigationDirection.LEFT;
+        } else if (dAngle > 120) {
+            return NavigationDirection.SHARP_LEFT;
+        } else if (dAngle < -60 && dAngle >= -120) {
+            return NavigationDirection.RIGHT;
+        }
+        return NavigationDirection.SHARP_RIGHT;
     }
 
 
