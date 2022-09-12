@@ -128,6 +128,9 @@ public class GraphDB {
      * @return An iterable of the ids of the neighbors of v.
      */
     Iterable<Long> adjacent(long v) {
+        if (idNodeMap.get(v) == null) {
+            return new LinkedList<>();
+        }
         return idNodeMap.get(v).neighbors.keySet();
     }
 
