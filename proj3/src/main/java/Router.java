@@ -35,9 +35,10 @@ public class Router {
         edgeTo.put(begin, begin);
         distanceTo.put(begin, 0.);
         searchQueue.add(begin);
+        long current;
         labelA:
         while (!searchQueue.isEmpty()) {
-            long current = searchQueue.remove();
+            current = searchQueue.remove();
             marked.add(current);
             for (long neighbor: g.adjacent(current)) {
                 if (marked.contains(neighbor)) {
@@ -62,7 +63,10 @@ public class Router {
         }
 
         List<Long> res = new ArrayList<>();
-        long current = end;
+        if (edgeTo.get(end) == null) {
+            return res;
+        }
+        current = end;
         while (current != begin) {
             res.add(0, current);
             current = edgeTo.get(current);
