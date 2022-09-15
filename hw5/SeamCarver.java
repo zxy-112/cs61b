@@ -10,7 +10,13 @@ public class SeamCarver {
     }
 
     public Picture picture() {
-        return picture;
+        Picture res = new Picture(width(), height());
+        for (int y = 0; y < height(); y++) {
+            for (int x = 0; x < width(); x++) {
+                res.set(x, y, picture.get(x, y));
+            }
+        }
+        return res;
     }
 
     public int width() {
@@ -135,10 +141,12 @@ public class SeamCarver {
     }
 
     private void transpose() {
-        Picture newPic = new Picture(height(), width());
-        for (int m = 0; m < width(); m += 1) {
-            for (int n = 0; n < height(); n += 1) {
-                newPic.set(n, m, picture.get(m, n));
+        int newHeight = width();
+        int newWidth = height();
+        Picture newPic = new Picture(newWidth, newHeight);
+        for (int y = 0; y < newHeight; y += 1) {
+            for (int x = 0; x < newWidth; x += 1) {
+                newPic.set(x, y, picture.get(y, x));
             }
         }
         picture = newPic;
