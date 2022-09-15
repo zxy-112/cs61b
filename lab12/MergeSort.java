@@ -72,6 +72,9 @@ public class MergeSort {
         while (res.size() > 1) {
             res.enqueue(mergeSortedQueues(res.dequeue(), res.dequeue()));
         }
+        if (res.isEmpty()) {
+            return null;
+        }
         return res.peek();
     }
 
