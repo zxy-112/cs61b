@@ -1,3 +1,7 @@
+import com.sun.source.tree.Tree;
+
+import java.util.*;
+
 /**
  * Class with 2 ways of doing Counting sort, one naive way and one "better" way
  *
@@ -17,7 +21,7 @@ public class CountingSort {
         // find max
         int max = Integer.MIN_VALUE;
         for (int i : arr) {
-            max = max > i ? max : i;
+            max = Math.max(max, i);
         }
 
         // gather all the counts for each value
@@ -67,6 +71,29 @@ public class CountingSort {
      */
     public static int[] betterCountingSort(int[] arr) {
         // TODO make counting sort work with arrays containing negative numbers.
-        return null;
+        int[] res = new int[arr.length];
+        int minVal = Integer.MAX_VALUE;
+        for (int item: arr) {
+            if (item < minVal) {
+                minVal = item;
+            }
+        }
+        int pos = 0;
+        for (int item: arr) {
+            res[pos] = item - minVal;
+            pos += 1;
+        }
+        res = naiveCountingSort(res);
+        for (int m = 0; m < res.length; m += 1) {
+            res[m] = res[m] + minVal;
+        }
+        return res;
+    }
+
+    public static void main(String[] args) {
+        int[] testArray = {1, 3, 4, 1, 2, 4, 3};
+        System.out.println(Arrays.toString(naiveCountingSort(testArray)));
+        int[] testArray2 = {-1, 2, -3, 3};
+        System.out.println(Arrays.toString(betterCountingSort(testArray2)));
     }
 }
