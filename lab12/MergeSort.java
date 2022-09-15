@@ -73,7 +73,7 @@ public class MergeSort {
             res.enqueue(mergeSortedQueues(res.dequeue(), res.dequeue()));
         }
         if (res.isEmpty()) {
-            return null;
+            return new Queue<>();
         }
         return res.peek();
     }
