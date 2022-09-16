@@ -160,4 +160,8 @@ public class SeamCarver {
         picture = SeamRemover.removeVerticalSeam(picture, seam);
     }
 
+    public static void main(String[] args) {
+        Picture p = new Picture("./images/10x12.png");
+    }
+
 }
